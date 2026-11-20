@@ -79,3 +79,11 @@ Updated the benchmark to read experiment settings from JSON.
 The smoke run completed and saved eight timing records.
 Both methods produced identical allocations and passed
 the energy-budget checks.
+
+##9
+Completed the benchmark at 64, 256 and 1024 tones using
+20 channels per size, true and estimated information,
+and 10 timing repeats. All checks passed.
+
+Saved 2400 records to results/final_timing.csv.
+Next: analyse runtime differences and plot results.
