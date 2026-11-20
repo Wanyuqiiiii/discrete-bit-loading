@@ -1,0 +1,12 @@
+{
+  "tones": [64, 256, 1024],
+  "cases_per_size": 20,
+  "seed_start": 1000,
+  "energy_per_tone": 1.0,
+  "gap": 1.0,
+  "bmax": 6,
+  "taps": 8,
+  "noise_var": 0.1,
+  "pilots": 20,
+  "repeats": 10
+}

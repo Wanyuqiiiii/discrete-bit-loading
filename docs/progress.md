@@ -66,3 +66,10 @@ These are development cases, not the final test set.
 
 Next: inspect timing results and prepare the final experiment settings.
 
+##7
+Set the main experiment sizes to 64, 256 and 1024 tones,
+with 20 independent channels per size and 10 timing repeats.
+
+Reserved seeds starting at 1000 for final testing.
+The main comparison will use paired runtime differences,
+while checking allocation agreement and energy feasibility.
