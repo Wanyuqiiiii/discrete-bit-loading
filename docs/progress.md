@@ -26,4 +26,14 @@ small budget cases.
 
 Next: test more channel cases and compare runtime.
 
+##4
+Added the synthetic channel generator from the mathematical guide.
+It returns true channel quality and an estimate from noisy pilots
+and separate noise measurements.
+
+Shape, finite-value and sign checks passed. Repeating the same
+seed produced identical data.
+
+Next: compare both allocation methods on generated channels.
+
 
