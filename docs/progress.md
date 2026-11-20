@@ -36,4 +36,33 @@ seed produced identical data.
 
 Next: compare both allocation methods on generated channels.
 
+##5
+Checked both allocation methods on generated channels with
+64, 256 and 1024 subcarriers, using development seeds 0–4.
+
+All 30 comparisons passed across true and estimated channel
+quality inputs. Both methods returned identical allocations,
+satisfied the energy budget and bit limits, and preserved
+the input arrays.
+
+Next: add runtime measurements and save experiment results.
+
+##6
+Added checks on generated channels with 64, 256 and 1024 tones.
+For each size, used five development seeds and tested both true
+and estimated channel information.
+
+All 30 comparisons passed. The checks covered allocation agreement,
+energy feasibility, output shape, integer bit limits, finite values
+and unchanged inputs.
+
+Added a timing script with a warm-up and six repeated runs.
+The execution order alternates between scan and heap.
+Timing includes initialization and allocation, but excludes data
+generation, checks and file output.
+
+Saved individual measurements to results/development_timing.csv.
+These are development cases, not the final test set.
+
+Next: inspect timing results and prepare the final experiment settings.
 
