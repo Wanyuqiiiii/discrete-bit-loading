@@ -73,3 +73,9 @@ with 20 independent channels per size and 10 timing repeats.
 Reserved seeds starting at 1000 for final testing.
 The main comparison will use paired runtime differences,
 while checking allocation agreement and energy feasibility.
+
+##8
+Updated the benchmark to read experiment settings from JSON.
+The smoke run completed and saved eight timing records.
+Both methods produced identical allocations and passed
+the energy-budget checks.

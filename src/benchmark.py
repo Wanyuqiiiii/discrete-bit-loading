@@ -5,10 +5,21 @@ import numpy as np
 from baseline import bit_loading_scan
 from modified import bit_loading_heap
 from data import make_loading_case
+import argparse
+import json
 
-gap = 1.0
-bmax = 6
-repeats = 6
+parser = argparse.ArgumentParser()
+parser.add_argument("--config", required=True)
+args = parser.parse_args()
+
+root = Path(__file__).resolve().parent.parent
+
+with (root / args.config).open(encoding="utf-8") as file:
+    config = json.load(file)
+
+gap = config["gap"]
+bmax = config["bmax"]
+repeats = config["repeats"]
 
 methods = {
     "scan": bit_loading_scan,
@@ -17,15 +28,20 @@ methods = {
 
 rows = []
 
-for tones in [64, 256, 1024]:
-    budget = float(tones)
+for size_index, tones in enumerate(config["tones"]):
+    budget = config["energy_per_tone"] * tones
+    first_seed = config["seed_start"] + size_index * config["cases_per_size"]
 
-    for seed in range(5):
-        g_true, g_hat = make_loading_case(seed, tones=tones)
+    for seed in range(first_seed, first_seed + config["cases_per_size"]):
+        g_true, g_hat = make_loading_case(
+            seed,
+            tones=tones,
+            taps=config["taps"],
+            noise_var=config["noise_var"],
+            pilots=config["pilots"],
+        )
 
-        for condition, g in [("true", g_true),
-                             ("estimated", g_hat)]:
-
+        for condition, g in [("true", g_true), ("estimated", g_hat)]:
             scan_bits = bit_loading_scan(g, budget, gap, bmax)
             heap_bits = bit_loading_heap(g, budget, gap, bmax)
             assert np.array_equal(scan_bits, heap_bits)
@@ -43,6 +59,7 @@ for tones in [64, 256, 1024]:
                     elapsed = perf_counter() - start
 
                     assert np.array_equal(bits, scan_bits)
+
                     energy = np.sum(gap / g * (2.0 ** bits - 1))
                     assert energy <= budget + 1e-9
 
@@ -67,12 +84,11 @@ for tones in [64, 256, 1024]:
 
             print(
                 f"N={tones}, seed={seed}, {condition}: "
-                f"scan={scan_ms:.3f} ms, "
-                f"heap={heap_ms:.3f} ms"
+                f"scan={scan_ms:.3f} ms, heap={heap_ms:.3f} ms"
             )
 
-root = Path(__file__).resolve().parent.parent
-output = root / "results" / "development_timing.csv"
+run_name = Path(args.config).stem
+output = root / "results" / f"{run_name}_timing.csv"
 output.parent.mkdir(parents=True, exist_ok=True)
 
 with output.open("w", newline="", encoding="utf-8") as file:
