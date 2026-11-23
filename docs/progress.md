@@ -87,3 +87,13 @@ and 10 timing repeats. All checks passed.
 
 Saved 2400 records to results/final_timing.csv.
 Next: analyse runtime differences and plot results.
+
+##10
+Summarized the final timing results using the median of
+10 repeats for each method on each channel.
+
+Calculated paired runtime differences across 20 channels
+per size and condition. Estimated 95% bootstrap intervals
+using 10000 resamples of the channel-level differences.
+
+The heap method had lower mean runtime in all six groups.
