@@ -1,6 +1,12 @@
 import heapq
 import numpy as np
 
+def build_heap(g, gap):
+    heap = [(gap / g[i], i) for i in range(len(g))]
+    heapq.heapify(heap)
+    return heap
+
+
 def bit_loading_heap(g, energy_budget, gap=1.0, bmax=6):
     g = np.asarray(g, dtype=float)
 
@@ -9,8 +15,7 @@ def bit_loading_heap(g, energy_budget, gap=1.0, bmax=6):
 
     heap = []
     if bmax > 0:
-        heap = [(gap / g[i], i) for i in range(len(g))]
-        heapq.heapify(heap)
+        heap = build_heap(g, gap)
 
     while heap:
         cost, i = heapq.heappop(heap)
@@ -38,9 +43,6 @@ if __name__ == "__main__":
 
         assert np.array_equal(scan_bits, heap_bits)
 
-        print(
-            f"Budget: {budget}, "
-            f"scan: {scan_bits}, heap: {heap_bits}"
-        )
+        print(f"Budget: {budget}, scan: {scan_bits}, heap: {heap_bits}")
 
     print("All allocation comparisons passed.")

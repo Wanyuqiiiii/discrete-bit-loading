@@ -98,9 +98,15 @@ using 10000 resamples of the channel-level differences.
 
 The heap method had lower mean runtime in all six groups.
 
-%%11
+##11
 Ran the low-budget stress test on the same channels as the main benchmark.
 Reduced the energy budget per subcarrier from 1.0 to 0.001.
 
 The runtime differences were close to zero under the low budget for both
 true and estimated channel information.
+
+##12
+Measured heap construction separately on the main benchmark channels.
+The measurement includes creating the initial cost list and calling heapify.
+Mean setup time increased from about 0.007 ms for 64 subcarriers to
+about 0.113 ms for 1024 subcarriers.
