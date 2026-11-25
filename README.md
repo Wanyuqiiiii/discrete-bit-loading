@@ -5,17 +5,17 @@ This project studies bit allocation under a total energy budget,
 based on Campello's paper "Practical Bit Loading for DMT" (1999).
 
 ## Methods
-The baseline scans all eligible subcarriers to find the cheapest
-one-bit increment. I plan to replace this scan with a min-heap
-and compare the runtime.
+The baseline in `src/baseline.py` scans the subcarriers to find the cheapest
+place to add one bit. In `src/modified.py`, I replaced this scan with a
+min-heap. Both methods use the same rule for allocating bits.
 
 ## Experiments
-Both methods will use the same channels, energy budget and bit
-limits. I will check allocation agreement, total bits and energy
-use, and measure runtime for different numbers of subcarriers.
+I used `src/data.py` to generate the channels. I ran both methods on the
+same inputs, checked that their allocations agreed, and compared their
+runtimes. The timing tables and figures are in `results/`.
 
 ## Setup and quick checks
-
+I tested the project on Windows with Python 3.13.15 and the package versions listed in `requirements.txt`.
 ```cmd
 git clone https://github.com/Wanyuqiiiii/discrete-bit-loading.git
 cd discrete-bit-loading
@@ -26,8 +26,11 @@ python -m venv .venv
 .venv\Scripts\python.exe src/check_channels.py
 .venv\Scripts\python.exe src/benchmark.py --config configs/smoke.json
 ```
-
-The smoke run saves eight timing records to `results/smoke_timing.csv`.
+On my computer, `src/check_baseline.py` took about 0.14 seconds.
+It checked six energy budgets and printed `All exhaustive checks passed.`
+`src/modified.py` took about 0.13 seconds. The scan and heap methods gave the same allocation for all six budgets.
+`src/check_channels.py` took about 0.41 seconds and printed `All 30 channel comparisons passed.`
+The smoke run took about 0.18 seconds on my computer and saved 8 timing records to `results/smoke_timing.csv`.
 
 ## Reproduce the results
 
@@ -41,15 +44,29 @@ Run these commands from the project folder on Windows.
 .venv\Scripts\python.exe src/benchmark_heap_setup.py
 ```
 
-The timing tables and figures are saved in `results/`. The main comparison is
-shown in `runtime_difference.png`. The low-budget comparison is shown in
-`stress_comparison.png`. Heap setup times are saved in `heap_setup_timing.csv`.
+Approximate runtimes on my computer are shown below. All output files are saved in `results/`.
+
+| Script | Time | Expected output |
+|---|---:|---|
+| `benchmark.py --config configs/final.json` | 11.29 s | `final_timing.csv` with 2,400 timing records |
+| `analyse_results.py` | 0.98 s | `timing_summary.csv`, `paired_timing.csv` and `runtime_difference.png` |
+| `benchmark.py --config configs/stress.json` | 0.46 s | `stress_timing.csv` with 2,400 timing records |
+| `analyse_stress.py` | 0.92 s | `stress_comparison.png` |
+| `benchmark_heap_setup.py` | 0.25 s | `heap_setup_timing.csv` with 120 records |
 
 ## Experiment settings
 
-We tested 64, 256 and 1024 subcarriers, with 20 channels per size.
+I simulated each channel with 8 taps and a noise variance of 0.1.
+I estimated the channel response by averaging 20 noisy pilot observations.
+Both methods used a gap of 1 and a limit of 6 bits per subcarrier.
+
+The smoke test used seed 50. The final tests used a separate set of seeds
+starting at 1000. For each seed, both methods used the same channel so
+their runtimes could be compared on the same input.
+
+I tested 64, 256 and 1024 subcarriers, with 20 channels per size.
 The random seeds were 1000–1019, 1020–1039 and 1040–1059, respectively.
-For each channel, we timed both methods 10 times using true channel
+For each channel, I timed both methods 10 times using true channel
 information and 10 times using estimated channel information.
 
 The stress test used the same channels and reduced the energy budget
